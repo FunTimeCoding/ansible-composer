@@ -1,2 +1,4 @@
 ---
-dependencies: []
+dependencies:
+- { role: apt-transport-https, when: php.package_source == 'sury' }
+- { role: php-cli, when: php.package_source == 'sury' }

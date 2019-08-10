@@ -1,1 +1,6 @@
 ---
+php:
+  package_source: debian
+composer:
+  # TODO: Update this using ~/src/php-tools/bin/show-latest-composer-version.sh
+  version: 1.8.5

@@ -1,1 +1,21 @@
 ---
+- apt:
+    name: composer
+  remote_user: root
+  when: ansible_os_family == 'Debian' and php.package_source == 'debian'
+
+- get_url:
+    url: 'https://getcomposer.org/download/{{ composer.version }}/composer.phar'
+    dest: /usr/local/bin/composer
+    mode: 0755
+  remote_user: root
+  when: ansible_os_family == 'Debian' and php.package_source == 'sury'
+
+# TODO: There are errors in this tap.
+#- homebrew_tap:
+#    tap: homebrew/php
+#  when: ansible_system == 'Darwin'
+
+- homebrew:
+    name: composer
+  when: ansible_system == 'Darwin'
