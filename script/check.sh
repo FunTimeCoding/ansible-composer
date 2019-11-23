@@ -176,7 +176,7 @@ if [ ! "${RETURN_CODE}" = '0' ]; then
 fi
 
 # shellcheck source=/dev/null
-. .venv/bin/activate
+. "${HOME}/venv/bin/activate"
 RETURN_CODE=0
 ANSIBLE_LINT_CONCERNS=$(ansible-lint --nocolor --parseable-severity tests/test.yaml) || RETURN_CODE=$?
 
