@@ -20,13 +20,26 @@ if [ "${1}" = --ci-mode ]; then
     CONTINUOUS_INTEGRATION_MODE=true
 fi
 
-script/python/update.sh
 SYSTEM=$(uname)
 
 if [ "${SYSTEM}" = Darwin ]; then
     FIND='gfind'
 else
     FIND='find'
+fi
+
+TEMPORARY_DIRECTORY="${HOME}/tmp"
+UPDATE_FILE="${TEMPORARY_DIRECTORY}/last-venv-update.txt"
+
+if [ ! -f "${UPDATE_FILE}" ]; then
+    mkdir -p "${TEMPORARY_DIRECTORY}"
+    touch "${UPDATE_FILE}"
+    script/python/update.sh
+fi
+
+if test "$(${FIND} "${UPDATE_FILE}" -mmin +300)"; then
+    touch "${UPDATE_FILE}"
+    script/python/update.sh
 fi
 
 MARKDOWN_FILES=$(${FIND} . -regextype posix-extended -name '*.md' ! -regex "${EXCLUDE_FILTER}" -printf '%P\n')
@@ -111,7 +124,7 @@ else
 
     if [ ! "${SHELL_SCRIPT_CONCERNS}" = '' ]; then
         CONCERN_FOUND=true
-        echo "(WARNING) Shell script concerns:"
+        echo "[WARNING] Shell script concerns:"
         echo "${SHELL_SCRIPT_CONCERNS}"
     fi
 fi
@@ -126,7 +139,7 @@ if [ ! "${EMPTY_FILES}" = '' ]; then
         echo "${EMPTY_FILES}" > build/log/empty-files.txt
     else
         echo
-        echo "(WARNING) Empty files:"
+        echo "[WARNING] Empty files:"
         echo
         echo "${EMPTY_FILES}"
     fi
@@ -140,7 +153,7 @@ if [ ! "${TO_DOS}" = '' ]; then
         echo "${TO_DOS}" > build/log/to-dos.txt
     else
         echo
-        echo "(NOTICE) To dos:"
+        echo "[NOTICE] To dos:"
         echo
         echo "${TO_DOS}"
     fi
@@ -154,7 +167,7 @@ if [ ! "${SHELLCHECK_IGNORES}" = '' ]; then
         echo "${SHELLCHECK_IGNORES}" > build/log/shellcheck-ignores.txt
     else
         echo
-        echo "(NOTICE) Shellcheck ignores:"
+        echo "[NOTICE] Shellcheck ignores:"
         echo
         echo "${SHELLCHECK_IGNORES}"
     fi
@@ -169,7 +182,7 @@ if [ ! "${RETURN_CODE}" = '0' ]; then
         echo "${ANSIBLE_CHECK_CONCERNS}" > build/log/ansible-check.txt
     else
         echo
-        echo "(NOTICE) Ansible check concerns:"
+        echo "[NOTICE] Ansible check concerns:"
         echo
         echo "${ANSIBLE_CHECK_CONCERNS}"
     fi
@@ -187,7 +200,7 @@ if [ ! "${RETURN_CODE}" = '0' ]; then
         echo "${ANSIBLE_LINT_CONCERNS}" > build/log/ansible-lint.txt
     else
         echo
-        echo "(NOTICE) Ansible lint concerns:"
+        echo "[WARNING] Ansible lint concerns:"
         echo
         echo "${ANSIBLE_LINT_CONCERNS}"
     fi
