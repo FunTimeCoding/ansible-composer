@@ -1,5 +1,5 @@
 ---
 composer:
-  # TODO: Update this using ~/src/php-tools/bin/show-latest-composer-version.sh
+  # TODO: Update this using ~/src/php-utility/bin/show-latest-composer-version.sh
   # TODO: Keep this matched to the Debian version since composer behavior in newer versions may change and break the Debian version.
   version: 1.8.5
